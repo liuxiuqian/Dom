@@ -1,9 +1,79 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<title>面向对象编程的继承方式</title>
-	</head>
+<head>
+	<meta charset="UTF-8">
+	<title>面向对象编程的继承方式</title>
+</head>
 	<body>
+		<script type="text/javascript">
+			console.log("原型链继承开始")
+			// 方法一、原型链继承 (prototype模式)
+			// 父类型
+			function Person(name) {
+				this.name = name;
+				this.play = [1,2,3];
+				this.getName = function () {
+					console.log(this.name);
+				}
+			}
+			Person.prototype.age = 20; // 给构造函数添加原型属性
+			// 子类型
+			function Student() {
+				this.name = "风信子";
+				this.setScore = function () {}
+			}
+			Student.prototype = new Person() // 实现继承
+			// 修改子构造函数的原型的构造器属性
+			console.log(Student.prototype.constructor === Person) // ture
+			// 任何一个prototype对象都有一个constructor属性，指向它的构造函数。
+			// Student 应该有自己的 constructor属性，上边通过实现继承 Student.prototype.constructor指向了Person
+			// 为了防止 继承链的紊乱 重新修改 constructor属性
+			Student.prototype.constructor = Student;
+			console.log(Student.prototype.constructor === Student) // ture
+			const s1 = new Student(1000);
+			console.log(s1.age) // 20
+			console.log(s1.play) //  [1, 2, 3]
+			console.log(s1 instanceof Person) // true  继承父类原型的属性
+			s1.play.push(4);
+			const s2 = new Student(1000);
+			console.log(s2.play) //  [1, 2, 3, 4]
+			console.log("原型链继承结束")
+			// 特点：1、实例可继承的属性有：实例的构造函数的属性，父类构造函数属性，父类原型的属性。（新实例不会继承父类实例的属性！）
+			// 此种方法存在的问题：
+			// 1、新实例无法向父类构造函数传参。
+			// 2、继承单一。
+			// 3、所有新实例都会共享父类实例的属性。（原型上的属性是共享的，一个实例修改了原型属性，另一个实例的原型属性也会被修改！）
+
+
+			console.log("构造函数继承开始")
+			// 方法二、构造函数继承
+			// 用.call()和.apply()将父类构造函数引入子类函数（在子类函数中做了父类函数的自执行（复制））
+			function Person2(name) {
+				this.name = name;
+				this.getName = function () {
+					console.log(this.name);
+				}
+			}
+			Person2.prototype.age = 20; // 给构造函数添加原型属性
+
+			// 创建子构造函数
+			function Student2(name){
+				// 使用call借用Person的构造函数
+				Person2.call(this, name);
+			}
+
+			var stu = new Student('风信子');
+			stu.getName(); // 风信子
+			console.log(stu.age) // 20
+			console.log(stu instanceof Person2) // false 没有继承父类原型的属性
+
+			// 特点：
+			// 1、只继承了父类构造函数的属性，没有继承父类原型的属性。
+　　　 // 2、解决了原型链继承缺点1、2、3。
+　　　 // 3、可以继承多个构造函数属性（call多个）。
+　　　 // 4、在子实例中可向父实例传参。
+
+			console.log("构造函数继承结束")
+		</script>
 	</body>
 </html>
