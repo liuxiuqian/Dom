@@ -44,7 +44,7 @@
 			// 2、继承单一。
 			// 3、所有新实例都会共享父类实例的属性。（原型上的属性是共享的，一个实例修改了原型属性，另一个实例的原型属性也会被修改！）
 
-
+      console.log("===============华丽的分割线===================");
 			console.log("构造函数继承开始")
 			// 方法二、构造函数继承
 			// 用.call()和.apply()将父类构造函数引入子类函数（在子类函数中做了父类函数的自执行（复制））
@@ -77,13 +77,14 @@
 			// 2、无法实现构造函数的复用。（每次用每次都要重新调用）
 			// 3、每个新实例都有父类构造函数的副本，臃肿。
 			console.log("构造函数继承结束")
-
-
-
+      console.log("===============华丽的分割线===================");
+      console.log("构造函数+开始");
+      // 方法三 构造函数+ 原型式继承
 			// 创建父构造函数
 			function Person3(name,age){
 				this.name = name;
 				this.age = age;
+				this.friends = ['小王','小强','小王八'];
 				this.showName = function(){
 					console.log(this.name);
 				}
@@ -92,13 +93,55 @@
 			Person3.prototype.showAge = function(){
 				console.log(this.age);
 			}
+
 			// 创建子构造函数
-			function Student3(name){
-				Person3.call(this,name);
+			function Student3(name,age){
+				Person3.apply(this,arguments);
 			}
 			// 设置继承
 			Student3.prototype = Person3.prototype;
 			Student3.prototype.constructor = Student3;
+
+			// Person3和Student3的constructor属性同时指向Student3
+      // Person3.prototype和Student3.prototype现在指向了同一个对象
+      // 那么任何对Student3.prototype的修改，都会反映到Person3.prototype。
+			console.log(Person3.prototype.constructor);  // ==> Student3
+      console.log(Student3.prototype.constructor); // ==> Student3
+      Person3.prototype.sex = "男";
+      Student3.prototype.sex = "女";
+			const stu3 = new Student3("风信子",20);
+			console.log(stu3);
+			stu3.showAge(); // 20
+		  stu3.showName(); // 风信子
+      stu3.friends.push("风信子");
+      stu3.name = "liuxiuqian";
+      stu3.showName(); // liuxiuqian
+      console.log(stu3.friends); // ["小王", "小强", "小王八", "风信子"]
+
+      const stu21 = new Student3("风信子",20);
+      stu21.showName(); // 风信子
+      console.log(stu21.friends); // ["小王", "小强", "小王八"]
+
+
+      stu21.friends.push("stu21-风信子");
+      stu21.name = "stu21";
+
+      stu3.showName(); // liuxiuqian
+      console.log(stu3.friends); // ["小王", "小强", "小王八", "风信子"]
+      stu21.showName(); // stu21
+      console.log(stu21.friends); //  ["小王", "小强", "小王八", "stu21-风信子"]
+
+      // 1、父构造函数的属性继承到了子构造函数的实例对象上了,
+      // 2、继承了父构造函数原型对象上的成员
+      // 3、解决了给父构造函数传递参数问题
+      // 存在的问题
+      // 共享的问题,对Student3.prototype的修改，都会反映到Person3.prototype。因为Student3.prototype = Person3.prototype
+
+
+      console.log("构造函数+结束");
+      console.log("===============华丽的分割线===================");
+
+
 
 
 
