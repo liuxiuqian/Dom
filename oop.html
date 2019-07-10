@@ -62,18 +62,46 @@
 				Person2.call(this, name);
 			}
 
-			var stu = new Student('风信子');
+			var stu = new Student2('风信子');
 			stu.getName(); // 风信子
-			console.log(stu.age) // 20
+			console.log(stu.age) // undefined
 			console.log(stu instanceof Person2) // false 没有继承父类原型的属性
-
+			console.log(stu)
 			// 特点：
 			// 1、只继承了父类构造函数的属性，没有继承父类原型的属性。
 			// 2、解决了原型链继承缺点1、2、3。
 			// 3、可以继承多个构造函数属性（call多个）。
 			// 4、在子实例中可向父实例传参。
-
+			// 此种方法存在的问题：
+			// 1、只能继承父类构造函数的属性。
+			// 2、无法实现构造函数的复用。（每次用每次都要重新调用）
+			// 3、每个新实例都有父类构造函数的副本，臃肿。
 			console.log("构造函数继承结束")
+
+
+
+			// 创建父构造函数
+			function Person3(name,age){
+				this.name = name;
+				this.age = age;
+				this.showName = function(){
+					console.log(this.name);
+				}
+			}
+			// 设置父构造函数的原型对象
+			Person3.prototype.showAge = function(){
+				console.log(this.age);
+			}
+			// 创建子构造函数
+			function Student3(name){
+				Person3.call(this,name);
+			}
+			// 设置继承
+			Student3.prototype = Person3.prototype;
+			Student3.prototype.constructor = Student3;
+
+
+
 		</script>
 	</body>
 </html>
