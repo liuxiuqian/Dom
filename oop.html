@@ -78,7 +78,7 @@
 			// 3、每个新实例都有父类构造函数的副本，臃肿。
 			console.log("构造函数继承结束")
       console.log("===============华丽的分割线===================");
-      console.log("构造函数+开始");
+      console.log("构造函数+原型式继承开始");
       // 方法三 构造函数+ 原型式继承
 			// 创建父构造函数
 			function Person3(name,age){
@@ -138,11 +138,48 @@
       // 共享的问题,对Student3.prototype的修改，都会反映到Person3.prototype。因为Student3.prototype = Person3.prototype
 
 
-      console.log("构造函数+结束");
+      console.log("构造函数+原型式继承结束");
       console.log("===============华丽的分割线===================");
 
 
 
+			console.log("构造函数+原型式+寄生式继承（空对象中介）开始");
+			// 方法四  构造函数+原型式+寄生式继承（空对象中介）阮大神的空对象中介
+			// 常用方法
+			// 创建父构造函数
+			function Person4(name,age){
+				this.name = name;
+				this.age = age;
+				this.friends = ['小王','小强','小王八'];
+				this.showName = function(){
+					console.log(this.name);
+				}
+			}
+			// 设置父构造函数的原型对象
+			Person4.prototype.showAge = function(){
+				console.log(this.age);
+			}
+
+			// 创建子构造函数
+			function Student4(name,age){
+				Person4.apply(this,arguments);
+			}
+			// 设置继承
+			// 创建空对象
+			const F = function(){};
+			F.prototype = Person4.prototype;
+			Student4.prototype = new F();
+			Student4.prototype.constructor = Student4;
+
+			const stu4 = new Student4("风信子", 20);
+
+			console.log(stu4);
+			console.log(Person4.prototype.constructor); // ==> Person4
+			console.log(Student4.prototype.constructor); // ==> Student4
+
+			// 解决对 Student4.prototype的修改，都会反映到 Person4.prototype。
+			console.log("构造函数+原型式+寄生式继承（空对象中介）结束");
+			console.log("===============华丽的分割线===================");
 
 
 		</script>
