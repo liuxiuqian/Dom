@@ -5,10 +5,18 @@
   <title>防抖与节流的区别</title>
 </head>
 <body>
-  <!--  放抖测试 -->
-  放抖测试 <input id="debounce" type="text"  placeholder="请输入内容">
-  结果: <span id="debounceText"></span>
+  <div>
+    <!--  放抖测试 -->
+    放抖测试 <input id="debounce" type="text"  placeholder="请输入内容">
+    结果: <span id="debounceText"></span>
+  </div>
+
   <script type="text/javascript" >
+
+    // 1、触发高频事件后n秒内函数只会执行一次，如果n秒内高频事件再次被触发，则重新计算时间
+    // 【思路】： 每次触发事件时都取消之前的延时调用方法
+
+    // 番外内容：
     // HTML5 标准事件 oninput 和 IE 专属事件 onpropertychange 事件实时监听输入框value的变化
     // oninput 事件在用户输入时触发。
     // 该事件在 <input> 或 <textarea> 元素的值发生改变时触发。
@@ -25,7 +33,6 @@
         }, 500);
       };
     }
-    
     function sayHi() {
       console.log("防抖成功");
       document.getElementById('debounceText').innerText = document.getElementById('debounce').value;
@@ -33,6 +40,27 @@
 
     var inp = document.getElementById('debounce');
     inp.addEventListener('input', debounce(sayHi)); // 防抖
+
+    // 2、节流
+    // 高频事件触发，但在n秒内只会执行一次，所以节流会稀释函数的执行频率
+    // 【思路】：每次触发事件时都判断当前是否有等待执行的延时函数
+
+    function throttle(fn) {
+      let canRun = true; // 通过闭包保存一个标记
+      return function () {
+        if (!canRun) return; // 在函数开头判断标记是否为true，不为true则return
+        canRun = false; // 立即设置为false
+        setTimeout(() => { // 将外部传入的函数的执行放在setTimeout中
+          fn.apply(this, arguments);
+          // 最后在setTimeout执行完毕后再把标记设置为true(关键)表示可以执行下一次循环了。当定时器没有执行的时候标记永远是false，在开头被return掉
+          canRun = true;
+        }, 500);
+      };
+    }
+    function sayHi2(e) {
+      console.log(e.target.innerWidth, e.target.innerHeight);
+    }
+    window.addEventListener('resize', throttle(sayHi2));
 
   </script>
 </body>
