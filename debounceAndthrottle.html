@@ -6,7 +6,8 @@
 </head>
 <body>
   <!--  放抖测试 -->
-  <input id="debounce" type="text" oninput ="debounce()" placeholder="请输入内容">
+  放抖测试 <input id="debounce" type="text"  placeholder="请输入内容">
+  结果: <span id="debounceText"></span>
   <script type="text/javascript" >
     // HTML5 标准事件 oninput 和 IE 专属事件 onpropertychange 事件实时监听输入框value的变化
     // oninput 事件在用户输入时触发。
@@ -15,9 +16,23 @@
     //       不同之处在于 oninput 事件在元素值发生变化是立即触发，
     //       onchange 在元素失去焦点时才会触发。
     //       另外一点不同是 onchange 事件也可以作用于 <keygen> 和 <select> 元素。
-    function debounce(){
-      console.log("ssss")
+    function debounce(fn){
+      let timeout = null; // 创建一个标记用来存放定时器的返回值
+      return function () {
+        clearTimeout(timeout); // 每当用户输入的时候把前一个 setTimeout clear 掉
+        timeout = setTimeout(() => { // 然后又创建一个新的 setTimeout, 这样就能保证输入字符后的 interval 间隔内如果还有字符输入的话，就不会执行 fn 函数
+          fn.apply(this, arguments);
+        }, 500);
+      };
     }
+    
+    function sayHi() {
+      console.log("防抖成功");
+      document.getElementById('debounceText').innerText = document.getElementById('debounce').value;
+    }
+
+    var inp = document.getElementById('debounce');
+    inp.addEventListener('input', debounce(sayHi)); // 防抖
 
   </script>
 </body>
