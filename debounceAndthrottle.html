@@ -5,6 +5,20 @@
   <title>防抖与节流的区别</title>
 </head>
 <body>
+  <!--  放抖测试 -->
+  <input id="debounce" type="text" oninput ="debounce()" placeholder="请输入内容">
+  <script type="text/javascript" >
+    // HTML5 标准事件 oninput 和 IE 专属事件 onpropertychange 事件实时监听输入框value的变化
+    // oninput 事件在用户输入时触发。
+    // 该事件在 <input> 或 <textarea> 元素的值发生改变时触发。
+    // 提示： 该事件类似于 onchange 事件。
+    //       不同之处在于 oninput 事件在元素值发生变化是立即触发，
+    //       onchange 在元素失去焦点时才会触发。
+    //       另外一点不同是 onchange 事件也可以作用于 <keygen> 和 <select> 元素。
+    function debounce(){
+      console.log("ssss")
+    }
 
+  </script>
 </body>
 </html>
