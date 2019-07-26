@@ -9,3 +9,6 @@
 4. 构造函数+原型式+寄生式继承（空对象中介）阮大神的空对象中介
 
 ### 二、防抖与节流的区别 （debounceAndthrottle.html）
+
+
+### 三、柯里化函数（currying.html）
