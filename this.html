@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>this的使用</title>
+</head>
+<body>
+	<div>
+			this指的是函数运行时所在的环境。
+	</div>
+	<script>
+		let obj = {
+			foo: function () { console.log(this.bar) },
+			bar: 1
+		};
+
+		let foo = obj.foo;
+		let bar = 2;
+
+		obj.foo() // 1
+		foo() // 2
+	</script>
+</body>
+</html>
